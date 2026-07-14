@@ -470,3 +470,126 @@ html, body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+
+/* ════════════════════════════════
+   SCREEN 0 — COUNTDOWN
+════════════════════════════════ */
+.countdown-container {
+  text-align: center;
+  max-width: 460px;
+  width: 100%;
+}
+
+.countdown-hint {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 4vw, 1.7rem);
+  font-style: italic;
+  color: var(--celeste2);
+  margin-bottom: 2.5rem;
+  opacity: 0;
+}
+
+.countdown-timer {
+  display: flex;
+  gap: clamp(.6rem, 3vw, 1.5rem);
+  justify-content: center;
+  opacity: 0;
+}
+
+.countdown-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.countdown-num {
+  font-family: var(--font-mono);
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  color: var(--celeste);
+  letter-spacing: .05em;
+}
+
+.countdown-label {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--texto2);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  margin-top: .3rem;
+}
+
+/* ════════════════════════════════
+   BLACK OVERLAY ICON (transición carta)
+════════════════════════════════ */
+#black-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#black-overlay-icon {
+  font-size: 2.5rem;
+  opacity: 0;
+  filter: drop-shadow(0 0 20px rgba(126, 200, 227, .6));
+}
+
+/* ════════════════════════════════
+   ÁLBUM BTN
+════════════════════════════════ */
+.album-btn {
+  margin-top: 2.5rem;
+  padding: .8rem 2.2rem;
+  background: transparent;
+  border: 1px solid var(--b2);
+  border-radius: 50px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--celeste2);
+  cursor: pointer;
+  opacity: 0;
+  transition: all .25s;
+}
+
+.album-btn:hover {
+  background: rgba(126, 200, 227, .1);
+  border-color: var(--celeste);
+}
+
+/* ════════════════════════════════
+   SCREEN — CARTA
+════════════════════════════════ */
+.carta-container {
+  max-width: 560px;
+  width: 100%;
+  background: var(--glass);
+  border: 1px solid var(--b2);
+  border-radius: 16px;
+  padding: clamp(1.8rem, 5vw, 3rem);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(126, 200, 227, .1);
+  opacity: 0;
+}
+
+.carta-texto {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.8vw, 1.2rem);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--texto);
+  line-height: 1.9;
+  text-align: center;
+  white-space: pre-line;
+  min-height: 200px;
+}
+
+.carta-firma {
+  display: block;
+  margin-top: 1.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(.85rem, 2vw, .95rem);
+  color: var(--celeste2);
+  opacity: 0;
+}

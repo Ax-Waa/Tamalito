@@ -18,7 +18,23 @@
 <div id="vignette"></div>
 <div id="gradBg"></div>
 <canvas id="stars-bg"></canvas>
-<div id="black-overlay"></div>
+<div id="black-overlay">
+  <div id="black-overlay-icon">🩵</div>
+</div>
+<!-- ══════════════════════════════
+     SCREEN 0 — COUNTDOWN
+══════════════════════════════ -->
+<section id="screen-countdown" class="screen">
+  <div class="countdown-container">
+    <p class="countdown-hint">Falta poco... NO SEAS DESESPERADA SADKJASJD</p>
+    <div class="countdown-timer">
+      <div class="countdown-block"><span class="countdown-num" id="cd-days">00</span><span class="countdown-label">días</span></div>
+      <div class="countdown-block"><span class="countdown-num" id="cd-hours">00</span><span class="countdown-label">hrs</span></div>
+      <div class="countdown-block"><span class="countdown-num" id="cd-mins">00</span><span class="countdown-label">min</span></div>
+      <div class="countdown-block"><span class="countdown-num" id="cd-secs">00</span><span class="countdown-label">seg</span></div>
+    </div>
+  </div>
+</section>
 
 <!-- ══════════════════════════════
      SCREEN 1 — CONTRASEÑA
@@ -181,18 +197,22 @@
 
   <div class="polaroids-grid" id="polaroids-grid"></div>
 
-  <div class="mensaje-final">
-    Hace unos meses no sabía que un llavero de Bob Esponja me iba a dar a la mejor persona del año.<br/><br/>
-    Desde el plaza vea hasta aquí. No sé cómo explicarlo pero apareciste en el momento exacto en que más lo necesitaba.<br/><br/>
-    En este corto tiempo, me enseñaste que la amistad también puede llegar de golpe, sin avisar, y quedarse para siempre.<br/><br/>
-    A veces siento que hay personas que llegan a tu vida sin hacer ruido y de repente ya no imaginas el día sin hablar con ellas. Tú eres una de esas.<br/><br/>
-    Gracias por las charlitas, las caminatas y todo lo que falta por vivir. Con suerte te estaré abrazando en este momento, y sino, solo levanta los ojos y mírame.
-    <span class="firma">FC, Tamalito 🩵</span>
+  <button class="album-btn">Seguir →</button>
+</section>
+
+<!-- ══════════════════════════════
+     SCREEN 6 — CARTA
+══════════════════════════════ -->
+<section id="screen-carta" class="screen scrollable">
+  <div class="carta-container">
+    <p class="carta-texto" id="carta-texto"></p>
+    <span class="carta-firma">FC Tamalito - TQM 🩵</span>
   </div>
 </section>
 
 <!-- AUDIO -->
 <audio id="audio-vegas" src="audio/vegas.mp3" preload="auto" loop></audio>
+<audio id="audio-forever" src="audio/forever.mp3" preload="auto" loop></audio>
 
 <script src="main.js"></script>
 </body>

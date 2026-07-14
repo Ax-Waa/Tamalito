@@ -4,6 +4,11 @@
 
 gsap.registerPlugin(TextPlugin);
 
+
+const COUNTDOWN_TARGET = new Date(2026, 6, 14, 13, 11, 0).getTime(); // 14 jul 2026, 1:11pm
+const audioForever = document.getElementById("audio-forever");
+
+
 /* ─── CONFIG ─── */
 const CONFIG = {
   password: "14/07/2006",
@@ -14,48 +19,56 @@ const CONFIG = {
       texto:
         "La vez que salimos y te dejé en tu casa... nos despedimos con una foto de Bob y Patricio juntos.",
       caption: "Bob & Patricio",
+      foto: "fotos/foto4.jpg",
     },
     {
       emoji: "🌙",
       texto:
         "La vez que salimos hasta muy tarde y nos la pasamos caminando por todos lados.",
       caption: "Como no nos cansamos?",
+      foto: "fotos/foto5.jpg",
     },
     {
       emoji: "🔮",
       texto:
         "La feria holística. Nos leyeron el tarot y creo que se nos están cumpliendo varias cosas.",
       caption: "El tarot (o la luna) lo sabía todo",
+      foto: "fotos/foto6.jpg",
     },
     {
       emoji: "🎬",
       texto:
         "El día que fuimos al cine y vimos dos pelis seguidas. No dabas más pero fue got",
       caption: "Dos pelis de las GOTT",
+      foto: "fotos/foto7.jpg",
     },
     {
       emoji: "🖼️",
       texto:
         "El museo. Sacamos fotos muy gott y creo que éramos los únicos que se reían solitos DLSAKDJA.",
       caption: "Arte y DESASTRE",
+      foto: "fotos/foto8.jpg",
     },
     {
       emoji: "🥢",
       texto:
         "Arenales: makis, play, el parque de tu casa... y el tatuaje de araña que me hiciste en la mano.",
       caption: "La araña sigue tatuada pero en mi mente",
+      foto: "fotos/foto9.jpg",
     },
     {
       emoji: "💬",
       texto:
         "El día que te conté muchas cosas y quería decirte para ser mejores amigos. No se pudo por tiempo, pero no dejaba de pensarlo.",
       caption: "Lo que no se dijo ese día",
+      foto: "fotos/foto10.jpg",
     },
     {
       emoji: "🌧️",
       texto:
         "La cajita feliz, el día entero paseando, la lluvia, el soju... y antes de dejarte en casa, aceptaste ser mi mejor amiga.",
       caption: "El soju selló el trato (pacto satánico)",
+      foto: "fotos/foto11.jpg",
     },
   ],
 
@@ -230,9 +243,47 @@ function initStars() {
   window.addEventListener('resize', () => { resize(); initStarData(); });
 }
 
+
+/* ════════════════════════════════
+   SCREEN 0 — COUNTDOWN
+════════════════════════════════ */
+function initCountdown() {
+  const el   = document.getElementById('screen-countdown');
+  const hint = el.querySelector('.countdown-hint');
+  const box  = el.querySelector('.countdown-timer');
+  const dEl  = document.getElementById('cd-days');
+  const hEl  = document.getElementById('cd-hours');
+  const mEl  = document.getElementById('cd-mins');
+  const sEl  = document.getElementById('cd-secs');
+
+  gsap.fromTo(hint, { opacity:0, y:20 }, { opacity:1, y:0, duration:1.2, delay:.3 });
+  gsap.fromTo(box,  { opacity:0 },       { opacity:1,      duration:1,   delay:.6 });
+
+  let iv;
+  const tick = () => {
+    const diff = COUNTDOWN_TARGET - Date.now();
+    if (diff <= 0) {
+      clearInterval(iv);
+      blackTransition(() => showScreen('password', initPassword));
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    dEl.textContent = String(d).padStart(2, '0');
+    hEl.textContent = String(h).padStart(2, '0');
+    mEl.textContent = String(m).padStart(2, '0');
+    sEl.textContent = String(s).padStart(2, '0');
+  };
+  tick();
+  iv = setInterval(tick, 1000);
+}
+
 /* ════════════════════════════════
    SCREEN 1 — CONTRASEÑA
 ════════════════════════════════ */
+
 function initPassword() {
   const hint  = document.querySelector('.pw-hint');
   const sub   = document.querySelector('.pw-sub');
@@ -393,7 +444,6 @@ function actualizarContador() {
   const el = document.querySelector('.camara-contador-fotos');
   if (el) el.textContent = `${state.fotosCapturadas.length} / ${CONFIG.momentos.length}`;
 }
-
 /* ════════════════════════════════
    SCREEN 5 — ÁLBUM
 ════════════════════════════════ */
@@ -403,20 +453,35 @@ function animAlbum(el) {
   const titulo = el.querySelector('.album-titulo');
   const sub    = el.querySelector('.album-sub');
   const grid   = el.querySelector('.polaroids-grid');
-  const msg    = el.querySelector('.mensaje-final');
+  const btn    = el.querySelector('.album-btn');
 
   gsap.fromTo(titulo, { opacity:0, y:15 }, { opacity:1, y:0, duration:.9, delay:.3 });
   gsap.fromTo(sub,    { opacity:0 },       { opacity:1,      duration:.7, delay:.6 });
 
-  // Generar polaroids de las fotos capturadas
   grid.innerHTML = '';
 
   const fotosReales = [
     { src: 'fotos/foto1.jpg', caption: 'Tú bien chiquita (hace unos años xd)' },
     { src: 'fotos/foto2.jpg', caption: 'FotoPatricio' },
-    { src: 'fotos/foto3.jpg', caption: 'Bob Y Patricio' },
+    { src: 'fotos/foto3.jpg', caption: 'Nuestro primer Chat' },
   ];
 
+  // Fotos de los momentos capturados en el juego (van primero)
+  state.fotosCapturadas.forEach((f, i) => {
+    const p = document.createElement('div');
+    p.className = 'polaroid';
+    p.style.transform = `rotate(${(Math.random()-0.5)*6}deg)`;
+    p.innerHTML = `
+      <img class="polaroid-img" src="${f.foto}" alt="foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" style="display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:2px;">
+      <div class="polaroid-img" style="display:none;font-size:2.5rem;align-items:center;justify-content:center;">${f.emoji}</div>
+      <div class="polaroid-caption">${f.caption}</div>
+    `;
+    grid.appendChild(p);
+    gsap.fromTo(p, { opacity:0, y:30 },
+      { opacity:1, y:0, duration:.7, delay:.8 + i*.15, ease:'back.out(1.2)' });
+  });
+
+  // Fotos reales originales (van al final)
   fotosReales.forEach((f, i) => {
     const p = document.createElement('div');
     p.className = 'polaroid';
@@ -427,38 +492,85 @@ function animAlbum(el) {
       <div class="polaroid-caption">${f.caption}</div>
     `;
     grid.appendChild(p);
-    gsap.fromTo(p, { opacity:0, y:30, rotate: parseFloat(p.style.transform.replace(/[^-\d.]/g,'')) - 5 },
-      { opacity:1, y:0, duration:.7, delay:.8 + i*.2, ease:'back.out(1.2)' });
-  });
-
-  // Polaroids de los momentos capturados en el juego
-  state.fotosCapturadas.forEach((f, i) => {
-    const p = document.createElement('div');
-    p.className = 'polaroid';
-    p.style.transform = `rotate(${(Math.random()-0.5)*6}deg)`;
-    p.innerHTML = `
-      <div class="polaroid-img" style="font-size:2.5rem;display:flex;align-items:center;justify-content:center;">${f.emoji}</div>
-      <div class="polaroid-caption">${f.caption}</div>
-    `;
-    grid.appendChild(p);
     gsap.fromTo(p, { opacity:0, y:30 },
-      { opacity:1, y:0, duration:.7, delay:.8 + (fotosReales.length + i)*.15, ease:'back.out(1.2)' });
+      { opacity:1, y:0, duration:.7, delay:.8 + (state.fotosCapturadas.length + i)*.15, ease:'back.out(1.2)' });
   });
 
-  // Mensaje final
-  setTimeout(() => {
-    gsap.fromTo(msg, { opacity:0, y:20 }, { opacity:1, y:0, duration:1.2, ease:'power2.out' });
-  }, (.8 + (fotosReales.length + state.fotosCapturadas.length) * .15 + .5) * 1000);
+  const totalFotos = state.fotosCapturadas.length + fotosReales.length;
+  gsap.fromTo(btn, { opacity:0 }, { opacity:1, duration:.8, delay: .8 + totalFotos*.15 + .4 });
+
+  btn.addEventListener('click', () => {
+    transicionCarta(
+      () => { switchToForever(); showScreen('carta', animCarta); },
+      () => { setTimeout(iniciarCartaTypewriter, 1500); }
+    );
+  }, { once: true });
+}
+
+/* ════════════════════════════════
+   TRANSICIÓN ÁLBUM → CARTA
+════════════════════════════════ */
+function transicionCarta(onMid, onDone) {
+  const overlay = document.getElementById('black-overlay');
+  const icon = document.getElementById('black-overlay-icon');
+  const tl = gsap.timeline();
+
+  tl.to(overlay, { opacity: 1, duration: 1.2 })
+    .fromTo(icon, { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' })
+    .call(onMid)
+    .to(icon, { opacity: 0, scale: 1.1, duration: 6, ease: 'power1.inOut' }, '+=0.5')
+    .to(overlay, { opacity: 0, duration: 6.2 }, '-=0.4')
+    .call(onDone);
+}
+
+function switchToForever() {
+  fadeAudio(audioVegas, audioVegas.volume, 0, 1500, () => audioVegas.pause());
+  audioForever.currentTime = 0;
+  audioForever.volume = 0;
+  audioForever.play().catch(() => {});
+  fadeAudio(audioForever, 0, 0.45, 2500);
+}
+
+/* ════════════════════════════════
+   SCREEN 6 — CARTA
+════════════════════════════════ */
+function animCarta(el) {
+  gsap.to(el.querySelector('.carta-container'), { opacity: 1, duration: 1 });
+  document.getElementById('carta-texto').textContent = '';
+}
+
+function iniciarCartaTypewriter() {
+  const el    = document.getElementById('carta-texto');
+  const firma = document.querySelector('.carta-firma');
+  const texto = CONFIG.mensajeFinal;
+  let i = 0;
+  const speed = 28; // ms por carácter — ajusta si quieres más rápido/lento
+
+  function escribir() {
+    if (i <= texto.length) {
+      el.textContent = texto.slice(0, i);
+      i++;
+      setTimeout(escribir, speed);
+    } else {
+      gsap.fromTo(firma, { opacity:0, y:10 }, { opacity:1, y:0, duration:1 });
+    }
+  }
+  escribir();
 }
 
 /* ════════════════════════════════
    INIT
 ════════════════════════════════ */
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener("DOMContentLoaded", () => {
   initStars();
   initBurbujas();
   setTimeout(() => {
-    document.getElementById('gradBg').style.animationPlayState = 'running';
+    document.getElementById("gradBg").style.animationPlayState = "running";
   }, 500);
-  showScreen('password', initPassword);
+
+  if (Date.now() >= COUNTDOWN_TARGET) {
+    showScreen("password", initPassword);
+  } else {
+    showScreen("countdown", initCountdown);
+  }
 });
